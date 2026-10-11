@@ -57,6 +57,8 @@ function CoastalPlacesSection() {
 export default function CoastalEscapesPage() {
   return (
     <CategoryTourExperience
+      backgroundImage="/images/headers/coastal-getaways.jpg"
+      backgroundPosition="center"
       category="Coastal Getaways"
       eyebrow="Coastal Getaways"
       heading="Sun, Shoreline and Slow Days by the Water"

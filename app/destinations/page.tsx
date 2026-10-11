@@ -32,6 +32,7 @@ export default async function DestinationsPage() {
         eyebrow="Destinations"
         title="Where to go next"
         subtitle="Explore the destinations currently featured across our tours."
+        backgroundImage="/images/backgrounds/zuma-rock-destinations.jpg"
       />
       <section className="container py-16">
         {!isSanityConfigured ? (

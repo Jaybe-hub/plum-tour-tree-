@@ -6,7 +6,7 @@ import { Compass } from "lucide-react";
 import { TourCard } from "@/components/cards/tour-card";
 import type { TourListItem } from "@/sanity/lib/queries";
 
-const CATEGORIES = ["All Tours", "Coastal Getaways", "City Explorers", "Cultural Journeys", "Wildlife and Safari"];
+const CATEGORIES = ["All Tours", "Coastal Getaways", "City Explorers", "Cultural Journeys", "Wildlife and Safari", "Nightlife"];
 
 export function TourDiscovery({ tours }: { tours: TourListItem[] }) {
   const [activeCategory, setActiveCategory] = useState<string>("All Tours");

@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { PageHeader } from "@/components/shared/page-header";
+import { GalleryLightbox } from "@/components/sections/gallery-lightbox";
 import { sanityFetch } from "@/sanity/lib/live";
 import { galleryImagesQuery, type GalleryImageItem } from "@/sanity/lib/queries";
-import { urlFor } from "@/sanity/lib/image";
 import { isSanityConfigured } from "@/sanity/env";
 
 export const metadata: Metadata = {
@@ -29,7 +28,12 @@ export default async function GalleryPage() {
 
   return (
     <>
-      <PageHeader eyebrow="Gallery" title="Moments from our tours" />
+      <PageHeader
+        eyebrow="Gallery"
+        title="Moments from our tours"
+        backgroundImage="/images/backgrounds/yemisi-shyllon-gallery.jpg"
+        overlay="strong"
+      />
       <section className="container py-16">
         {!isSanityConfigured ? (
           <div className="mx-auto max-w-md rounded-card border border-purple-900/10 bg-beige p-8 text-center">
@@ -46,21 +50,7 @@ export default async function GalleryPage() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-            {images.map((item) =>
-              item.image ? (
-                <div key={item._id} className="relative aspect-square overflow-hidden rounded-control">
-                  <Image
-                    src={urlFor(item.image).width(500).height(500).url()}
-                    alt={item.caption ?? "Gallery image"}
-                    fill
-                    sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
-                    className="object-cover transition-transform duration-500 hover:scale-105"
-                  />
-                </div>
-              ) : null
-            )}
-          </div>
+          <GalleryLightbox images={images} />
         )}
       </section>
     </>

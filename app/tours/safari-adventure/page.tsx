@@ -56,6 +56,8 @@ function SafariPlacesSection() {
 export default function SafariAdventurePage() {
   return (
     <CategoryTourExperience
+      backgroundImage="/images/headers/wildlife-safari.jpg"
+      backgroundPosition="center"
       category="Wildlife and Safari"
       eyebrow="Wildlife & Safari"
       heading="Into Nigeria's Wild Places"

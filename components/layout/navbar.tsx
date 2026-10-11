@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -20,6 +21,9 @@ const NAV_LINKS = [
 export function Navbar() {
   const [open, setOpen] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
+  const pathname = usePathname();
+
+  const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname?.startsWith(href));
 
   React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -43,7 +47,14 @@ export function Navbar() {
         <ul className="hidden items-center gap-7 lg:flex">
           {NAV_LINKS.map((link) => (
             <li key={link.href}>
-              <Link href={link.href} className="text-sm text-ink-secondary transition-colors hover:text-purple-700">
+              <Link
+                href={link.href}
+                aria-current={isActive(link.href) ? "page" : undefined}
+                className={cn(
+                  "text-sm transition-colors hover:text-purple-700",
+                  isActive(link.href) ? "font-medium text-purple-900" : "text-ink-secondary"
+                )}
+              >
                 {link.label}
               </Link>
             </li>
@@ -72,7 +83,15 @@ export function Navbar() {
           <ul className="container flex flex-col gap-1 py-4">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} onClick={() => setOpen(false)} className="block py-2.5 text-sm text-ink-secondary hover:text-purple-700">
+                <Link
+                  href={link.href}
+                  onClick={() => setOpen(false)}
+                  aria-current={isActive(link.href) ? "page" : undefined}
+                  className={cn(
+                    "block py-2.5 text-sm hover:text-purple-700",
+                    isActive(link.href) ? "font-medium text-purple-900" : "text-ink-secondary"
+                  )}
+                >
                   {link.label}
                 </Link>
               </li>

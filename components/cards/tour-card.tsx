@@ -18,7 +18,7 @@ export function TourCard({ tour }: { tour: TourListItem }) {
     <Link href={`/tours/${tour.slug}`} className="group block h-full">
       <Card className="flex h-full flex-col overflow-hidden transition-transform duration-300 group-hover:-translate-y-1">
         <CardImage className="aspect-[4/5] rounded-t-card">
-          {tour.tourImage ? (
+          {tour.tourImage?.asset ? (
             <Image
               src={urlFor(tour.tourImage).width(700).height(875).url()}
               alt={tour.name || "Tour image"}

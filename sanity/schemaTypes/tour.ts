@@ -38,7 +38,7 @@ export const tour = defineType({
       title: "Category",
       type: "string",
       group: "content",
-      options: { list: ["Coastal Getaways", "City Explorers", "Cultural Journeys", "Wildlife and Safari"] },
+      options: { list: ["Coastal Getaways", "City Explorers", "Cultural Journeys", "Wildlife and Safari", "Nightlife"] },
       validation: (rule) => rule.required()
     }),
     defineField({

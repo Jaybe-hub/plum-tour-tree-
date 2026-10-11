@@ -14,6 +14,9 @@ interface CategoryTourExperienceProps {
   subtitle: string;
   /** Optional "Places You'll Visit" (or similar) content rendered before the tours grid. */
   placesSection?: ReactNode;
+  /** Optional photographic header background (path under /public). */
+  backgroundImage?: string;
+  backgroundPosition?: string;
 }
 
 async function getToursForCategory(category: string): Promise<TourListItem[]> {
@@ -32,13 +35,21 @@ export async function CategoryTourExperience({
   eyebrow,
   heading,
   subtitle,
-  placesSection
+  placesSection,
+  backgroundImage,
+  backgroundPosition
 }: CategoryTourExperienceProps) {
   const tours = await getToursForCategory(category);
 
   return (
     <>
-      <PageHeader eyebrow={eyebrow} title={heading} subtitle={subtitle} />
+      <PageHeader
+        eyebrow={eyebrow}
+        title={heading}
+        subtitle={subtitle}
+        backgroundImage={backgroundImage}
+        imagePosition={backgroundPosition}
+      />
 
       {placesSection}
 

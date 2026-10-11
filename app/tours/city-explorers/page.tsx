@@ -103,6 +103,8 @@ function CityPlacesSection() {
 export default function CityExplorersPage() {
   return (
     <CategoryTourExperience
+      backgroundImage="/images/headers/city-adventures.jpg"
+      backgroundPosition="center"
       category="City Explorers"
       eyebrow="City Adventures"
       heading="The Pulse of Nigeria's Cities"

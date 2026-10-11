@@ -45,7 +45,7 @@ export default async function BlogDetailPage({ params }: { params: { slug: strin
   return (
     <>
       <section className="relative overflow-hidden bg-purple-900">
-        {post.coverImage && (
+        {post.coverImage?.asset && (
           <Image
             src={urlFor(post.coverImage).width(1600).height(900).url()}
             alt={post.title ?? "Blog post cover image"}

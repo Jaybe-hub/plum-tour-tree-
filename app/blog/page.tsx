@@ -32,6 +32,7 @@ export default async function BlogPage() {
         eyebrow="Blog"
         title="Destination guides and tour inspiration"
         subtitle="Useful information and inspiration for discovering destinations and memorable tour experiences."
+        backgroundImage="/images/backgrounds/erin-ijesha-blog.jpg"
       />
       <section className="container py-16">
         {!isSanityConfigured ? (

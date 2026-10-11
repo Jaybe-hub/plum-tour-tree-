@@ -40,7 +40,7 @@ export default async function DestinationDetailPage({ params }: { params: { slug
   return (
     <>
       <section className="relative overflow-hidden bg-purple-900">
-        {destination.image && (
+        {destination.image?.asset && (
           <Image
             src={urlFor(destination.image).width(1600).height(900).url()}
             alt={destination.name ?? "Destination image"}
@@ -74,21 +74,23 @@ export default async function DestinationDetailPage({ params }: { params: { slug
           </div>
         )}
 
-        {destination.gallery && destination.gallery.length > 0 && (
+        {destination.gallery && destination.gallery.filter((img) => img?.asset).length > 0 && (
           <div className="mt-10">
             <h2 className="text-h3 text-ink">Gallery</h2>
             <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
-              {destination.gallery.map((img, i) => (
-                <div key={i} className="relative aspect-square overflow-hidden rounded-control">
-                  <Image
-                    src={urlFor(img).width(400).height(400).url()}
-                    alt={`${destination.name ?? "Destination"} gallery image ${i + 1}`}
-                    fill
-                    sizes="200px"
-                    className="object-cover"
-                  />
-                </div>
-              ))}
+              {destination.gallery
+                .filter((img) => img?.asset)
+                .map((img, i) => (
+                  <div key={i} className="relative aspect-square overflow-hidden rounded-control">
+                    <Image
+                      src={urlFor(img).width(400).height(400).url()}
+                      alt={`${destination.name ?? "Destination"} gallery image ${i + 1}`}
+                      fill
+                      sizes="200px"
+                      className="object-cover"
+                    />
+                  </div>
+                ))}
             </div>
           </div>
         )}

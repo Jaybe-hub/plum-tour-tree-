@@ -9,7 +9,7 @@ export function DestinationCard({ destination }: { destination: DestinationListI
       href={`/destinations/${destination.slug}`}
       className="group relative block aspect-[3/4] overflow-hidden rounded-card bg-beige"
     >
-      {destination.image ? (
+      {destination.image?.asset ? (
         <Image
           src={urlFor(destination.image).width(600).height(800).url()}
           alt={destination.name ?? "Destination"}

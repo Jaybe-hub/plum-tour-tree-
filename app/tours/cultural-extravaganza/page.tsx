@@ -56,6 +56,8 @@ function CulturalPlacesSection() {
 export default function CulturalExtravaganzaPage() {
   return (
     <CategoryTourExperience
+      backgroundImage="/images/headers/cultural-journeys.jpg"
+      backgroundPosition="center 35%"
       category="Cultural Journeys"
       eyebrow="Cultural Journeys"
       heading="Stories, Heritage and Living Tradition"

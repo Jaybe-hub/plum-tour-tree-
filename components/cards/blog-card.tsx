@@ -11,7 +11,7 @@ export function BlogCard({ post }: { post: PostListItem }) {
   return (
     <Link href={`/blog/${post.slug}`} className="group block">
       <div className="relative aspect-[4/3] overflow-hidden rounded-card bg-beige">
-        {post.coverImage ? (
+        {post.coverImage?.asset ? (
           <Image
             src={urlFor(post.coverImage).width(600).height(450).url()}
             alt={post.title ?? "Blog post"}

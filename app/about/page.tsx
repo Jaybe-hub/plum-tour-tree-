@@ -15,6 +15,7 @@ export default function AboutPage() {
         eyebrow="About us"
         title="Your gateway to memorable journeys"
         subtitle="Plum Tree Tours designs curated tours for families, couples, and groups exploring Nigeria and beyond."
+        backgroundImage="/images/backgrounds/zaria-palace-about.jpg"
       />
 
       <section className="container py-16">

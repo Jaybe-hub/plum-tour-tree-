@@ -1,15 +1,27 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import { Sparkles, Route, MessageCircle, ShieldCheck, Compass, Users, Landmark, Mountain, ClipboardList, Briefcase } from "lucide-react";
+import { Sparkles, Route, MessageCircle, ShieldCheck, Compass, Users, Landmark, Mountain, ClipboardList, Briefcase, Target, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CtaBanner } from "@/components/sections/cta-banner";
-import { TourCard } from "@/components/cards/tour-card";
 import { DestinationCard } from "@/components/cards/destination-card";
 import { CategoryCard } from "@/components/cards/category-card";
 import { ServiceCard } from "@/components/cards/service-card";
+import { BlogCard } from "@/components/cards/blog-card";
 import { HeroSlider } from "@/components/sections/hero-slider";
+import { FeaturedToursCarousel } from "@/components/sections/featured-tours-carousel";
 import { sanityFetch } from "@/sanity/lib/live";
-import { toursListQuery, destinationsListQuery, type TourListItem, type DestinationListItem } from "@/sanity/lib/queries";
+import {
+  toursListQuery,
+  destinationsListQuery,
+  galleryImagesQuery,
+  postsListQuery,
+  type TourListItem,
+  type DestinationListItem,
+  type GalleryImageItem,
+  type PostListItem
+} from "@/sanity/lib/queries";
+import { urlFor } from "@/sanity/lib/image";
 import { isSanityConfigured } from "@/sanity/env";
 
 export const metadata: Metadata = {
@@ -43,6 +55,12 @@ const TOUR_EXPERIENCES = [
     description: "Untamed landscapes and wildlife encounters across Nigeria's game reserves.",
     imageUrl: "/images/categories/wildlife-safari.jpg",
     href: "/tours/safari-adventure"
+  },
+  {
+    name: "Nightlife",
+    description: "Lounges, live music and after-dark energy in Nigeria's liveliest entertainment districts.",
+    imageUrl: "/images/categories/nightlife.jpg",
+    href: "/tours/nightlife"
   }
 ];
 
@@ -108,6 +126,28 @@ async function getDestinations(): Promise<DestinationListItem[]> {
   }
 }
 
+async function getGalleryImages(): Promise<GalleryImageItem[]> {
+  if (!isSanityConfigured) return [];
+  try {
+    const { data } = await sanityFetch({ query: galleryImagesQuery });
+    return data as GalleryImageItem[];
+  } catch (error) {
+    console.error("Failed to fetch gallery images from Sanity:", error);
+    return [];
+  }
+}
+
+async function getPosts(): Promise<PostListItem[]> {
+  if (!isSanityConfigured) return [];
+  try {
+    const { data } = await sanityFetch({ query: postsListQuery });
+    return data as PostListItem[];
+  } catch (error) {
+    console.error("Failed to fetch blog posts from Sanity:", error);
+    return [];
+  }
+}
+
 const HERO_SLIDES = [
   { src: "/images/hero/01-tarkwa-bay.jpg", alt: "Tarkwa Bay beach front, Lagos" },
   { src: "/images/hero/02-abeokuta.jpg", alt: "Olumo Rock, Abeokuta" },
@@ -118,7 +158,14 @@ const HERO_SLIDES = [
 ];
 
 export default async function Home() {
-  const [tours, destinations] = await Promise.all([getTours(), getDestinations()]);
+  const [tours, destinations, galleryImages, posts] = await Promise.all([
+    getTours(),
+    getDestinations(),
+    getGalleryImages(),
+    getPosts()
+  ]);
+  const featuredTours = tours.filter((tour) => tour.featured).slice(0, 6);
+  const carouselTours = featuredTours.length > 0 ? featuredTours : tours.slice(0, 6);
 
   return (
     <>
@@ -145,29 +192,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Featured tours */}
-      <section className="container py-16">
-        <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
-          <div>
-            <p className="text-eyebrow uppercase text-ink-muted">Featured tours</p>
-            <h2 className="mt-3 text-h2 text-ink">Tours worth exploring</h2>
-          </div>
-          <Link href="/tours" className="text-sm font-medium text-purple-700 hover:text-gold">View all tours →</Link>
-        </div>
-        {tours.length > 0 ? (
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {tours.slice(0, 3).map((tour) => (
-              <TourCard key={tour._id} tour={tour} />
-            ))}
-          </div>
-        ) : (
-          <p className="mt-8 text-sm text-ink-secondary">
-            Tours are being added soon — check back shortly, or view the{" "}
-            <Link href="/tours" className="text-purple-700 hover:text-gold">Tours page</Link>.
-          </p>
-        )}
-      </section>
-
       {/* Tour experiences / categories */}
       <section className="container py-16">
         <div className="mx-auto max-w-xl text-center">
@@ -177,11 +201,30 @@ export default async function Home() {
             Discover unforgettable ways to experience Nigeria, from coastal escapes and vibrant cities to cultural treasures and unforgettable encounters with nature.
           </p>
         </div>
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {TOUR_EXPERIENCES.map((category) => (
             <CategoryCard key={category.href} {...category} />
           ))}
         </div>
+      </section>
+
+      {/* Featured tours */}
+      <section className="container py-16">
+        <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+          <div>
+            <p className="text-eyebrow uppercase text-ink-muted">Featured tours</p>
+            <h2 className="mt-3 text-h2 text-ink">Tours worth exploring</h2>
+          </div>
+          <Link href="/tours" className="text-sm font-medium text-purple-700 hover:text-gold">View all tours →</Link>
+        </div>
+        {carouselTours.length > 0 ? (
+          <FeaturedToursCarousel tours={carouselTours} />
+        ) : (
+          <p className="mt-8 text-sm text-ink-secondary">
+            Tours are being added soon — check back shortly, or view the{" "}
+            <Link href="/tours" className="text-purple-700 hover:text-gold">Tours page</Link>.
+          </p>
+        )}
       </section>
 
       {/* What We Offer */}
@@ -223,6 +266,100 @@ export default async function Home() {
             </p>
           )}
         </div>
+      </section>
+
+      {/* About us teaser */}
+      <section className="container py-16">
+        <div className="grid items-center gap-10 lg:grid-cols-2">
+          <div>
+            <p className="text-eyebrow uppercase text-ink-muted">About us</p>
+            <h2 className="mt-3 text-h2 text-ink">Your gateway to memorable journeys</h2>
+            <p className="mt-4 text-sm leading-relaxed text-ink-secondary">
+              Plum Tree Tours designs curated tours for families, couples, and groups exploring Nigeria and beyond — trips built around real itineraries, clear pricing and dependable on-ground coordination.
+            </p>
+            <Link href="/about" className="mt-5 inline-block text-sm font-medium text-purple-700 hover:text-gold">
+              Learn more about us →
+            </Link>
+          </div>
+          <div className="grid gap-5 sm:grid-cols-2">
+            <div className="rounded-card border border-purple-900/10 bg-beige p-6">
+              <Target className="text-purple-700" size={20} />
+              <h3 className="mt-3 text-sm font-medium text-ink">Our mission</h3>
+              <p className="mt-1.5 text-sm leading-relaxed text-ink-secondary">
+                Premium, well-organised tours accessible to Nigerian and international travellers.
+              </p>
+            </div>
+            <div className="rounded-card border border-purple-900/10 bg-beige p-6">
+              <Eye className="text-purple-700" size={20} />
+              <h3 className="mt-3 text-sm font-medium text-ink">Our vision</h3>
+              <p className="mt-1.5 text-sm leading-relaxed text-ink-secondary">
+                The most trusted name in African tour experiences — reliable and genuinely memorable.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Gallery teaser */}
+      <section className="bg-beige py-16">
+        <div className="container">
+          <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+            <div>
+              <p className="text-eyebrow uppercase text-ink-muted">Gallery</p>
+              <h2 className="mt-3 text-h2 text-ink">Moments from our tours</h2>
+            </div>
+            <Link href="/gallery" className="text-sm font-medium text-purple-700 hover:text-gold">View full gallery →</Link>
+          </div>
+          {galleryImages.length > 0 ? (
+            <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {galleryImages.slice(0, 4).map((item) =>
+                item.image?.asset ? (
+                  <Link
+                    key={item._id}
+                    href="/gallery"
+                    className="relative block aspect-square overflow-hidden rounded-control"
+                  >
+                    <Image
+                      src={urlFor(item.image).width(400).height(400).url()}
+                      alt={item.caption ?? "Gallery image"}
+                      fill
+                      sizes="(min-width: 640px) 25vw, 50vw"
+                      className="object-cover transition-transform duration-500 hover:scale-105"
+                    />
+                  </Link>
+                ) : null
+              )}
+            </div>
+          ) : (
+            <p className="mt-8 text-sm text-ink-secondary">
+              Gallery images are being added soon — check back shortly, or view the{" "}
+              <Link href="/gallery" className="text-purple-700 hover:text-gold">Gallery page</Link>.
+            </p>
+          )}
+        </div>
+      </section>
+
+      {/* Blog teaser */}
+      <section className="container py-16">
+        <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+          <div>
+            <p className="text-eyebrow uppercase text-ink-muted">Blog</p>
+            <h2 className="mt-3 text-h2 text-ink">Destination guides and tour inspiration</h2>
+          </div>
+          <Link href="/blog" className="text-sm font-medium text-purple-700 hover:text-gold">Read the blog →</Link>
+        </div>
+        {posts.length > 0 ? (
+          <div className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {posts.slice(0, 3).map((post) => (
+              <BlogCard key={post._id} post={post} />
+            ))}
+          </div>
+        ) : (
+          <p className="mt-8 text-sm text-ink-secondary">
+            Blog posts are being added soon — check back shortly, or view the{" "}
+            <Link href="/blog" className="text-purple-700 hover:text-gold">Blog page</Link>.
+          </p>
+        )}
       </section>
 
       {/* Why choose us */}

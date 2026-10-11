@@ -35,6 +35,7 @@ export default async function ToursPage() {
         eyebrow="Explore Nigeria"
         title="Your Next Adventure Starts Here"
         subtitle="Discover thoughtfully curated tour experiences across Nigeria, from vibrant cities and cultural landmarks to breathtaking landscapes and coastal escapes."
+        backgroundImage="/images/backgrounds/lagos-explore-nigeria.jpg"
       />
 
       {!isSanityConfigured ? (

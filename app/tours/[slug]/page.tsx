@@ -50,7 +50,7 @@ export default async function TourDetailPage({ params }: { params: { slug: strin
   return (
     <>
       <section className="relative overflow-hidden bg-purple-900">
-        {tour.tourImage && (
+        {tour.tourImage?.asset && (
           <Image
             src={urlFor(tour.tourImage).width(1600).height(900).url()}
             alt={tour.name ?? "Tour image"}
@@ -144,17 +144,19 @@ export default async function TourDetailPage({ params }: { params: { slug: strin
             <div className="mt-10">
               <h2 className="text-h3 text-ink">Gallery</h2>
               <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
-                {tour.gallery.map((img, i) => (
-                  <div key={i} className="relative aspect-square overflow-hidden rounded-control">
-                    <Image
-                      src={urlFor(img).width(400).height(400).url()}
-                      alt={`${tour.name ?? "Tour"} gallery image ${i + 1}`}
-                      fill
-                      sizes="200px"
-                      className="object-cover"
-                    />
-                  </div>
-                ))}
+                {tour.gallery
+                  .filter((img) => img?.asset)
+                  .map((img, i) => (
+                    <div key={i} className="relative aspect-square overflow-hidden rounded-control">
+                      <Image
+                        src={urlFor(img).width(400).height(400).url()}
+                        alt={`${tour.name ?? "Tour"} gallery image ${i + 1}`}
+                        fill
+                        sizes="200px"
+                        className="object-cover"
+                      />
+                    </div>
+                  ))}
               </div>
             </div>
           )}

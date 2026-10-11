@@ -28,14 +28,18 @@ const schema = z.object({
 });
 type FormValues = z.infer<typeof schema>;
 
-export function BookingForm({ tourOptions }: { tourOptions: string[] }) {
+export function BookingForm({ tourOptions, defaultTour }: { tourOptions: string[]; defaultTour?: string }) {
   const options = tourOptions.length > 0 ? tourOptions : SAMPLE_TOURS;
+  const preselectedTour = defaultTour && options.includes(defaultTour) ? defaultTour : "";
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting }
-  } = useForm<FormValues>({ resolver: zodResolver(schema), defaultValues: { travellers: 1 } });
+  } = useForm<FormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: { travellers: 1, tour: preselectedTour }
+  });
 
   function onSubmit(values: FormValues) {
     const lines = [
@@ -65,6 +69,11 @@ export function BookingForm({ tourOptions }: { tourOptions: string[] }) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="mx-auto max-w-xl space-y-5 rounded-card border border-purple-900/10 bg-white p-8 shadow-card">
+      {preselectedTour && (
+        <p className="rounded-control bg-beige px-4 py-2.5 text-xs text-ink-secondary">
+          Enquiring about: <span className="font-medium text-purple-700">{preselectedTour}</span>
+        </p>
+      )}
       <div className={fieldClass}>
         <label htmlFor="tour" className={labelClass}>Tour / package (optional)</label>
         <select id="tour" className={selectClass} {...register("tour")}>
