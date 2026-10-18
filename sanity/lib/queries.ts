@@ -239,3 +239,18 @@ export interface PostDetail {
   publishedAt: string | null;
   body: unknown[] | null;
 }
+
+// Every published photo on the site: Gallery Images plus tour and destination photos.
+export const allSitePhotosQuery = defineQuery(`
+  {
+    "gallery": *[_type == "galleryImage" && isPublished == true] | order(featured desc, _createdAt desc) {
+      _id, image, caption, category
+    },
+    "tours": *[_type == "tour" && isPublished == true] | order(featured desc, _createdAt desc) {
+      _id, name, tourImage, gallery
+    },
+    "destinations": *[_type == "destination" && isPublished == true] | order(featured desc, _createdAt desc) {
+      _id, name, image, gallery
+    }
+  }
+`);

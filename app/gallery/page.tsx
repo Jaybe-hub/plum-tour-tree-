@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/shared/page-header";
 import { GalleryLightbox } from "@/components/sections/gallery-lightbox";
-import { sanityFetch } from "@/sanity/lib/live";
-import { galleryImagesQuery, type GalleryImageItem } from "@/sanity/lib/queries";
+import { getAllSiteGalleryImages } from "@/sanity/lib/gallery";
 import { isSanityConfigured } from "@/sanity/env";
 
 export const metadata: Metadata = {
@@ -12,19 +11,8 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-async function getGalleryImages(): Promise<GalleryImageItem[]> {
-  if (!isSanityConfigured) return [];
-  try {
-    const { data } = await sanityFetch({ query: galleryImagesQuery });
-    return data as GalleryImageItem[];
-  } catch (error) {
-    console.error("Failed to fetch gallery images from Sanity:", error);
-    return [];
-  }
-}
-
 export default async function GalleryPage() {
-  const images = await getGalleryImages();
+  const images = await getAllSiteGalleryImages();
 
   return (
     <>

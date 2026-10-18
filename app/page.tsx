@@ -14,13 +14,12 @@ import { sanityFetch } from "@/sanity/lib/live";
 import {
   toursListQuery,
   destinationsListQuery,
-  galleryImagesQuery,
   postsListQuery,
   type TourListItem,
   type DestinationListItem,
-  type GalleryImageItem,
   type PostListItem
 } from "@/sanity/lib/queries";
+import { getAllSiteGalleryImages } from "@/sanity/lib/gallery";
 import { urlFor } from "@/sanity/lib/image";
 import { isSanityConfigured } from "@/sanity/env";
 
@@ -126,17 +125,6 @@ async function getDestinations(): Promise<DestinationListItem[]> {
   }
 }
 
-async function getGalleryImages(): Promise<GalleryImageItem[]> {
-  if (!isSanityConfigured) return [];
-  try {
-    const { data } = await sanityFetch({ query: galleryImagesQuery });
-    return data as GalleryImageItem[];
-  } catch (error) {
-    console.error("Failed to fetch gallery images from Sanity:", error);
-    return [];
-  }
-}
-
 async function getPosts(): Promise<PostListItem[]> {
   if (!isSanityConfigured) return [];
   try {
@@ -161,7 +149,7 @@ export default async function Home() {
   const [tours, destinations, galleryImages, posts] = await Promise.all([
     getTours(),
     getDestinations(),
-    getGalleryImages(),
+    getAllSiteGalleryImages(),
     getPosts()
   ]);
   const featuredTours = tours.filter((tour) => tour.featured).slice(0, 6);
@@ -312,7 +300,7 @@ export default async function Home() {
           </div>
           {galleryImages.length > 0 ? (
             <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
-              {galleryImages.slice(0, 4).map((item) =>
+              {galleryImages.slice(0, 8).map((item) =>
                 item.image?.asset ? (
                   <Link
                     key={item._id}

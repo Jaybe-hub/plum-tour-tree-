@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { sanityFetch } from "@/sanity/lib/live";
 import { tourBySlugQuery, type TourDetail } from "@/sanity/lib/queries";
 import { urlFor } from "@/sanity/lib/image";
+import { TourPhotoViewer, type TourPhoto } from "@/components/sections/tour-photo-viewer";
 
 export const dynamic = "force-dynamic";
 
@@ -46,6 +47,25 @@ export default async function TourDetailPage({ params }: { params: { slug: strin
         maximumFractionDigits: 0
       }).format(tour.price)
     : "Price on request";
+
+  const tourName = tour.name ?? "Tour";
+  const photos: TourPhoto[] = [];
+  if (tour.tourImage?.asset) {
+    photos.push({
+      thumb: urlFor(tour.tourImage).width(400).height(400).url(),
+      full: urlFor(tour.tourImage).width(1600).url(),
+      alt: `${tourName} main photo`
+    });
+  }
+  (tour.gallery ?? [])
+    .filter((img) => img?.asset)
+    .forEach((img, i) => {
+      photos.push({
+        thumb: urlFor(img).width(400).height(400).url(),
+        full: urlFor(img).width(1600).url(),
+        alt: `${tourName} photo ${i + 1}`
+      });
+    });
 
   return (
     <>
@@ -140,23 +160,12 @@ export default async function TourDetailPage({ params }: { params: { slug: strin
             </div>
           )}
 
-          {tour.gallery && tour.gallery.length > 0 && (
+          {photos.length > 0 && (
             <div className="mt-10">
-              <h2 className="text-h3 text-ink">Gallery</h2>
-              <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
-                {tour.gallery
-                  .filter((img) => img?.asset)
-                  .map((img, i) => (
-                    <div key={i} className="relative aspect-square overflow-hidden rounded-control">
-                      <Image
-                        src={urlFor(img).width(400).height(400).url()}
-                        alt={`${tour.name ?? "Tour"} gallery image ${i + 1}`}
-                        fill
-                        sizes="200px"
-                        className="object-cover"
-                      />
-                    </div>
-                  ))}
+              <h2 className="text-h3 text-ink">Photos</h2>
+              <p className="mt-1 text-xs text-ink-muted">Click any photo to view it larger.</p>
+              <div className="mt-4">
+                <TourPhotoViewer photos={photos} />
               </div>
             </div>
           )}
