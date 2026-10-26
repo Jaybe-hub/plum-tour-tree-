@@ -4,6 +4,7 @@ import { BlogCard } from "@/components/cards/blog-card";
 import { sanityFetch } from "@/sanity/lib/live";
 import { postsListQuery, type PostListItem } from "@/sanity/lib/queries";
 import { isSanityConfigured } from "@/sanity/env";
+import { LatestTourismNews } from "@/components/sections/latest-tourism-news";
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -57,6 +58,7 @@ export default async function BlogPage() {
           </div>
         )}
       </section>
+      <LatestTourismNews />
     </>
   );
 }

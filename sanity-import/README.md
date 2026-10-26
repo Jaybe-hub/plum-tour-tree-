@@ -19,4 +19,8 @@ Contents
 Open each post in Studio, read it, fix anything you disagree with, then tick "Published (visible on site)" and Publish.
 
 ## Add the Olumo Rock and Zuma Rock tours
-Create tours in Studio and upload `cover.jpg` as the Tour image and the other photos in the folder as Gallery. Fill in the real duration, price and dates yourself, as these were not provided. Choose the category (e.g. Cultural Journeys for Olumo Rock, City Explorers or Wildlife and Safari for Zuma Rock), then tick Featured and Published.
+1. `npx sanity dataset import tours.ndjson production`  (run from inside `sanity-import`)
+2. This creates two published, featured tours with cover photo and gallery: "Olumo Rock, Abeokuta" (Cultural Journeys) and "Zuma Rock, Abuja" (Wildlife and Safari).
+3. Duration is set to 1 day only because Studio requires a number. Price is blank, so the site shows "Price on request". Edit both in Studio when you have real details.
+4. You already had an Olumo Rock tour in Studio. Open it and untick "Published" (or delete it) so Olumo doesn't appear twice.
+5. Category can be changed in Studio if you prefer another one for Zuma Rock.
