@@ -100,7 +100,7 @@ export function FeaturedToursCarousel({ tours }: { tours: TourListItem[] }) {
             {price && <span className="font-medium text-purple-700">{price}</span>}
           </div>
           <Link
-            href={`/tours/${tour.slug}`}
+            href={`/tours/${tour.slug || tour._id}`}
             className="mt-6 inline-flex w-fit items-center gap-1.5 rounded-control bg-purple-900 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-purple-700"
           >
             View Details

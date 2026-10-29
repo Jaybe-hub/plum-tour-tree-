@@ -35,7 +35,7 @@ export interface TourListItem {
 }
 
 export const tourBySlugQuery = defineQuery(`
-  *[_type == "tour" && slug.current == $slug && isPublished == true][0] {
+  *[_type == "tour" && (slug.current == $slug || _id == $slug) && isPublished == true][0] {
     _id,
     name,
     "slug": slug.current,
